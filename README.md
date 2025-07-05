@@ -1,153 +1,210 @@
-# Virtual Card System
+# ZapKard - PHP MVC Virtual Card System
 
-A comprehensive virtual card management system with React frontend and Node.js backend, supporting Mobile Money (MoMo) and Orange Money integrations.
+A simple and modern virtual card management system built with PHP MVC architecture. Users can buy virtual cards, load funds, and check balances with a beautiful, responsive interface.
 
 ## 🚀 Features
 
-- **User Onboarding & KYC**: Complete user registration with identity verification
-- **Virtual Card Issuance**: Multi-currency virtual card creation
-- **Payment Integration**: MoMo and Orange Money support for loading and withdrawals
-- **Real-time Balance**: Live balance inquiry and transaction history
-- **Admin Dashboard**: Comprehensive monitoring and management tools
-- **Security**: PCI-DSS compliant with encrypted card data
+- **User Authentication**: Secure login and registration system
+- **Virtual Card Management**: Buy, load, and manage virtual cards
+- **Balance Tracking**: Real-time balance checking for cards and accounts
+- **Transaction History**: Complete transaction logging and history
+- **Modern UI**: Beautiful, responsive design with Tailwind CSS
+- **AJAX Integration**: Smooth, dynamic user experience
+- **Security**: Password hashing, session management, and input validation
 
-## 🏗️ Architecture
+## 📋 Requirements
 
+- PHP 7.4 or higher
+- MySQL 5.7 or higher (or MariaDB 10.2+)
+- Web server (Apache/Nginx)
+- XAMPP/WAMP/MAMP (for local development)
+
+## 🛠️ Installation
+
+### 1. Clone the Repository
+```bash
+git clone <your-repo-url>
+cd zapkard
 ```
-┌──────────┐       ┌────────────┐       ┌───────────────┐
-│ Frontend │←→ API │ Backend    │←→ Webhooks & │
-│ (React)  │       │ (Node.js)  │   Payment APIs │
-└──────────┘       └────────────┘       └───────────────┘
-         ↑                                   ↑
-         │                                   │
-     Browser                              MoMo/Orange Money
+
+### 2. Database Setup
+1. Start your MySQL server (XAMPP/WAMP/MAMP)
+2. Open phpMyAdmin or MySQL command line
+3. Import the database schema:
+   ```sql
+   -- Option 1: Using phpMyAdmin
+   - Create a new database named 'google_cards'
+   - Import the database.sql file
+   
+   -- Option 2: Using command line
+   mysql -u root -p < database.sql
+   ```
+
+### 3. Configure Database Connection
+Edit the database configuration in `index.php`:
+```php
+// Database configuration
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'google_cards');
+define('DB_USER', 'root');        // Your MySQL username
+define('DB_PASS', '');            // Your MySQL password
 ```
 
-## 🛠️ Tech Stack
+### 4. Web Server Configuration
 
-### Frontend
-- **React 18** with TypeScript
-- **Vite** for build tooling
-- **React Query** for state management
-- **React Hook Form** + **Yup** for form handling
-- **Tailwind CSS** for styling
-- **Axios** for HTTP requests
+#### Apache (.htaccess)
+Create a `.htaccess` file in the root directory:
+```apache
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+```
 
-### Backend
-- **Node.js** with Express
-- **MySQL** database
-- **JWT** authentication
-- **Bcrypt** for password hashing
-- **Joi** for validation
+#### Nginx
+Add this to your nginx configuration:
+```nginx
+location / {
+    try_files $uri $uri/ /index.php?$query_string;
+}
+```
 
-### Infrastructure
-- **Docker** containerization
-- **GitHub Actions** for CI/CD
-- **AWS** deployment ready
+### 5. Start the Application
+1. Place the project in your web server directory
+2. Access the application: `http://localhost/zapkard`
 
 ## 📁 Project Structure
 
 ```
-azacard/
-├── frontend/          # React + Vite application
-├── backend/           # Node.js Express API
-├── database/          # Database migrations and seeds
-├── docs/             # Documentation
-└── docker-compose.yml # Local development setup
+zapkard/
+├── app/                    # Application logic
+│   ├── Database.php       # Database connection class
+│   ├── User.php           # User model
+│   ├── Card.php           # Card model
+│   ├── Transaction.php    # Transaction model
+│   ├── HomeController.php # Home page controller
+│   ├── AuthController.php # Authentication controller
+│   ├── DashboardController.php # Dashboard controller
+│   └── CardController.php # Card operations controller
+├── views/                 # View templates
+│   ├── home.php          # Landing page
+│   ├── login.php         # Login page
+│   ├── register.php      # Registration page
+│   ├── dashboard.php     # Main dashboard
+│   ├── cards.php         # Cards listing
+│   ├── buy-card.php      # Buy card page
+│   ├── load-card.php     # Load card page
+│   ├── check-balance.php # Check balance page
+│   └── 404.php           # Error page
+├── index.php             # Main entry point and router
+├── database.sql          # Database schema
+└── README.md             # This file
 ```
 
-## 🚀 Quick Start
+## 🎯 Usage
 
-### Prerequisites
-- Node.js 18+
-- MySQL 8.0+
-- Docker (optional)
+### 1. Registration & Login
+- Visit the homepage and click "Get Started"
+- Register with your name, email, and password
+- Login with your credentials
+
+### 2. Buy Virtual Cards
+- From the dashboard, click "Buy New Card"
+- Enter the amount you want to load on the card
+- The system will generate a unique card number, CVV, and expiry date
+- The amount will be deducted from your account balance
+
+### 3. Load Cards
+- Click "Load Card" from the dashboard
+- Select an existing card from the dropdown
+- Enter the amount to add
+- The funds will be transferred from your account to the card
+
+### 4. Check Balances
+- Use "Check Balance" to view individual card balances
+- View all your cards and their current balances
+- See transaction history for each card
+
+## 🔧 API Endpoints
+
+The system includes AJAX endpoints for dynamic functionality:
+
+- `POST /api/cards/buy` - Purchase a new virtual card
+- `POST /api/cards/load` - Load funds to an existing card
+- `POST /api/cards/balance` - Check card balance
+
+## 🎨 Customization
+
+### Styling
+The application uses Tailwind CSS for styling. You can customize the design by:
+- Modifying the Tailwind classes in the view files
+- Adding custom CSS in the `<head>` section
+- Replacing the Tailwind CDN with a local installation
+
+### Features
+To add new features:
+1. Create new models in the `app/` directory
+2. Add controllers for new functionality
+3. Create view files in the `views/` directory
+4. Update the routing in `index.php`
+
+## 🔒 Security Features
+
+- **Password Hashing**: All passwords are hashed using PHP's `password_hash()`
+- **Session Management**: Secure session handling with user authentication
+- **Input Validation**: Form validation and sanitization
+- **SQL Injection Prevention**: Prepared statements for all database queries
+- **XSS Protection**: HTML escaping for user input
+
+## 🚀 Deployment
 
 ### Local Development
+1. Use XAMPP/WAMP/MAMP for local development
+2. Ensure mod_rewrite is enabled for Apache
+3. Set proper file permissions
 
-1. **Clone and setup:**
-   ```bash
-   git clone <repository-url>
-   cd azacard
-   ```
+### Production Deployment
+1. Upload files to your web server
+2. Configure your web server (Apache/Nginx)
+3. Set up the database on your production server
+4. Update database credentials in `index.php`
+5. Ensure HTTPS is enabled for security
 
-2. **Setup MySQL database:**
-   ```bash
-   # Create database
-   mysql -u root -p
-   CREATE DATABASE azacard CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-   ```
+## 🐛 Troubleshooting
 
-3. **Configure environment:**
-   ```bash
-   cd backend
-   cp env.example .env
-   # Edit .env with your MySQL credentials
-   ```
+### Common Issues
 
-4. **Run database migrations:**
-   ```bash
-   cd backend
-   npm install
-   npm run migrate
-   ```
+1. **404 Errors**: Ensure mod_rewrite is enabled and .htaccess is working
+2. **Database Connection**: Check database credentials and server status
+3. **AJAX Not Working**: Verify the API endpoints are accessible
+4. **Styling Issues**: Check if Tailwind CSS is loading properly
 
-5. **Start backend:**
-   ```bash
-   npm run dev
-   ```
-
-6. **Start frontend:**
-   ```bash
-   cd ../frontend
-   npm install
-   npm run dev
-   ```
-
-### Docker Setup
-
-```bash
-docker-compose up -d
+### Debug Mode
+To enable debug mode, add this to `index.php`:
+```php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 ```
 
-## 📚 API Documentation
+## 📝 License
 
-The API documentation is available at `/api/docs` when the backend is running.
-
-### Key Endpoints
-
-- **Authentication**: `/api/v1/auth/*`
-- **Cards**: `/api/v1/cards/*`
-- **Payments**: `/api/v1/payments/*`
-- **Admin**: `/api/v1/admin/*`
-
-## 🔒 Security
-
-- TLS 1.2+ encryption
-- PCI-DSS compliant card data handling
-- JWT token authentication
-- Rate limiting and input validation
-- Audit logging for all financial operations
-
-## 📊 Monitoring
-
-- Prometheus metrics
-- Grafana dashboards
-- Application logging
-- Error tracking
+This project is open source and available under the [MIT License](LICENSE).
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Add tests
+4. Test thoroughly
 5. Submit a pull request
-
-## 📄 License
-
-This project is proprietary software developed by Bao Technologies.
 
 ## 📞 Support
 
-For technical support or questions, please contact the development team. 
+For support or questions:
+- Create an issue in the repository
+- Check the troubleshooting section
+- Review the code comments for implementation details
+
+---
+
+**ZapKard** - Your Digital Financial Freedom 🚀 

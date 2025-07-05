@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://zapkard.shop/sitemap.xml 
